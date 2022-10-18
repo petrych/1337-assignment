@@ -1,3 +1,5 @@
+package tech.petrych.congestion.calculator;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import tech.petrych.congestion.calculator.initialcode.Car;
@@ -57,7 +59,7 @@ public class InitialCodeTest {
 	
 	// Assuming that 60min 00 sec is greater than 60 min
 	@Test
-	void givenOrdinaryVehicle_whenMoreThan60Min_thanTwoFees() {
+	void givenOrdinaryVehicle_whenMoreThan60Min_thenTwoFees() {
 		
 		final List<String> dateStrings = List.of(
 				"2013-01-14 11:00:00",
@@ -144,21 +146,6 @@ public class InitialCodeTest {
 		int tax = calculator.getTax(new Car(), parseInputAsDeprecatedDate(dateStrings));
 		
 		assertEquals(18, tax);
-	}
-	
-	
-	private LocalDateTime[] parseInputAsLocalDateTime(List<String> dateStrings) {
-		
-		LocalDateTime[] dates = new LocalDateTime[dateStrings.size()];
-		
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
-		
-		dateStrings.forEach(d -> {
-			LocalDateTime date = LocalDateTime.parse(d, dateTimeFormatter);
-			dates[dateStrings.indexOf(d)] = date;
-		});
-		
-		return dates;
 	}
 	
 	private Date[] parseInputAsDeprecatedDate(List<String> dateStrings) {

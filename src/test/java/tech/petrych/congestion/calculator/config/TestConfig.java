@@ -1,8 +1,8 @@
-package tech.petrych.congestion.calculator;
+package tech.petrych.congestion.calculator.config;
 
 import org.springframework.context.annotation.ComponentScan;
 
-@ComponentScan("com.petrych.screenshotter")
+@ComponentScan("tech.petrych.congestion.calculator")
 public class TestConfig {
 
 }

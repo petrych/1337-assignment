@@ -1,10 +1,11 @@
-package tech.petrych.congestion.calculator;
+package tech.petrych.congestion.calculator.model;
 
-public class Car implements Vehicle {
+public class Car implements IVehicle {
 	
+	@Override
 	public String getVehicleType() {
 		
-		return "Car";
+		return "car";
 	}
 	
 }

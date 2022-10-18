@@ -2,41 +2,40 @@ package tech.petrych.congestion.calculator.model;
 
 import java.time.LocalTime;
 
-public class DateRule {
+public class TimeRule {
 	
+	LocalTime startTime;
 	
-	LocalTime startPeriod;
-	
-	LocalTime endPeriod;
+	LocalTime endTime;
 	
 	int amount; // maybe worth BigDecimal
 	
-	public DateRule(LocalTime startPeriod, LocalTime endPeriod, int amount) {
+	public TimeRule(LocalTime startTime, LocalTime endTime, int amount) {
 		
-		this.startPeriod = startPeriod;
-		this.endPeriod = endPeriod;
+		this.startTime = startTime;
+		this.endTime = endTime;
 		this.amount = amount;
 	}
 	
 	
-	public LocalTime getStartPeriod() {
+	public LocalTime getStartTime() {
 		
-		return startPeriod;
+		return startTime;
 	}
 	
-	public void setStartPeriod(LocalTime startPeriod) {
+	public void setStartTime(LocalTime startTime) {
 		
-		this.startPeriod = startPeriod;
+		this.startTime = startTime;
 	}
 	
-	public LocalTime getEndPeriod() {
+	public LocalTime getEndTime() {
 		
-		return endPeriod;
+		return endTime;
 	}
 	
-	public void setEndPeriod(LocalTime endPeriod) {
+	public void setEndTime(LocalTime endTime) {
 		
-		this.endPeriod = endPeriod;
+		this.endTime = endTime;
 	}
 	
 	public int getAmount() {
@@ -48,6 +47,5 @@ public class DateRule {
 		
 		this.amount = amount;
 	}
-	
 	
 }

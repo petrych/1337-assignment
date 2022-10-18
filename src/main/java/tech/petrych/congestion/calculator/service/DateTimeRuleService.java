@@ -13,9 +13,9 @@ import java.util.List;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 
 @Service
-public class DateRuleService implements IDateRuleService {
+public class DateTimeRuleService implements IDateRuleService {
 	
-	private static final List<String> tollFreeDateStrings = List.of(
+	private static final List<String> TOLL_FREE_DATE_STRINGS = List.of(
 			"2013-01-01",
 			"2013-01-05",
 			"2013-01-06",
@@ -74,37 +74,65 @@ public class DateRuleService implements IDateRuleService {
 			"2013-12-31"
 	);
 	
+	private static final List<TimeRule> TIME_RULE_LIST = List.of(
+			new TimeRule(LocalTime.of(6, 0), LocalTime.of(6, 29), 8),
+			new TimeRule(LocalTime.of(6, 30), LocalTime.of(6, 59), 13),
+			new TimeRule(LocalTime.of(7, 0), LocalTime.of(7, 59), 18),
+			new TimeRule(LocalTime.of(8, 0), LocalTime.of(8, 29), 13),
+			new TimeRule(LocalTime.of(8, 30), LocalTime.of(14, 59), 8),
+			new TimeRule(LocalTime.of(15, 0), LocalTime.of(15, 29), 13),
+			new TimeRule(LocalTime.of(15, 30), LocalTime.of(16, 59), 18),
+			new TimeRule(LocalTime.of(17, 0), LocalTime.of(17, 59), 13),
+			new TimeRule(LocalTime.of(18, 0), LocalTime.of(18, 29), 8),
+			new TimeRule(LocalTime.of(18, 30), LocalTime.of(05, 59), 0)
+	);
+	
 	private LocalDate[] tollFreeDates;
 	
-	public DateRuleService() {
+	public DateTimeRuleService() {
+		
 		tollFreeDates = getTollFreeDates();
 	}
 	
 	
 	@Override
-	public List<TimeRule> getDateRules() {
-		return List.of(
-				new TimeRule(LocalTime.of(6, 0), LocalTime.of(6, 29), 8),
-				new TimeRule(LocalTime.of(6, 30), LocalTime.of(6, 59), 13),
-				new TimeRule(LocalTime.of(7, 0), LocalTime.of(7, 59), 18),
-				new TimeRule(LocalTime.of(8, 0), LocalTime.of(8, 29), 13),
-				new TimeRule(LocalTime.of(8, 30), LocalTime.of(14, 59), 8),
-				new TimeRule(LocalTime.of(15, 0), LocalTime.of(15, 29), 13),
-				new TimeRule(LocalTime.of(15, 30), LocalTime.of(16, 59), 18),
-				new TimeRule(LocalTime.of(17, 0), LocalTime.of(17, 59), 13),
-				new TimeRule(LocalTime.of(18, 0), LocalTime.of(18, 29), 8),
-				new TimeRule(LocalTime.of(18, 30), LocalTime.of(05, 59), 8)
-		);
+	public List<TimeRule> getTimeRules() {
+		
+		return TIME_RULE_LIST;
+	}
+	
+	@Override
+	public int getAmountFee(LocalDateTime localDateTime) {
+		
+		LocalTime localTime = LocalTime.of(localDateTime.getHour(), localDateTime.getMinute(),
+		                                   localDateTime.getSecond());
+		
+		return TIME_RULE_LIST.stream()
+		                     .filter(rule -> isWithinRange(localTime, rule))
+		                     .findAny()
+		                     .get().getAmount();
+		
+	}
+	
+	private boolean isWithinRange(LocalTime localTime, TimeRule rule) {
+		
+		LocalTime startTime = rule.getStartTime();
+		LocalTime endTime = rule.getEndTime();
+		
+		boolean isEqualOrAfterStartTime = localTime.equals(startTime) || localTime.isAfter(startTime);
+		boolean isEqualOrBeforeEndTime = localTime.equals(endTime) || localTime.isBefore(endTime);
+		
+		return isEqualOrAfterStartTime && isEqualOrBeforeEndTime;
 	}
 	
 	@Override
 	public LocalDate[] getTollFreeDates() {
 		
-		LocalDate[] tollFreeDates = new LocalDate[tollFreeDateStrings.size()];
+		LocalDate[] tollFreeDates = new LocalDate[TOLL_FREE_DATE_STRINGS.size()];
 		
-		tollFreeDateStrings.forEach(d -> {
+		TOLL_FREE_DATE_STRINGS.forEach(d -> {
 			LocalDate date = LocalDate.parse(d, ISO_LOCAL_DATE);
-			tollFreeDates[tollFreeDateStrings.indexOf(d)] = date;
+			tollFreeDates[TOLL_FREE_DATE_STRINGS.indexOf(d)] = date;
 		});
 		
 		return tollFreeDates;
@@ -112,9 +140,11 @@ public class DateRuleService implements IDateRuleService {
 	
 	@Override
 	public boolean isTollFreeDate(LocalDateTime date) {
+		
 		if (date == null) return false;
 		
-		return isWeekEnd(date) || Arrays.stream(tollFreeDates).findFirst().isPresent();
+		return isWeekEnd(date) || Arrays.stream(tollFreeDates)
+		                                .anyMatch(x -> x.format(ISO_LOCAL_DATE).equals(date.format(ISO_LOCAL_DATE)));
 	}
 	
 	private boolean isWeekEnd(LocalDateTime date) {
@@ -122,4 +152,5 @@ public class DateRuleService implements IDateRuleService {
 		DayOfWeek day = date.getDayOfWeek();
 		return (day.equals(DayOfWeek.SATURDAY) || day.equals(DayOfWeek.SUNDAY));
 	}
+	
 }

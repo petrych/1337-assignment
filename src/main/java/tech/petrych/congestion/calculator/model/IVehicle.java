@@ -1,6 +1,6 @@
 package tech.petrych.congestion.calculator.model;
 
-public interface Vehicle {
+public interface IVehicle {
 	
 	String getVehicleType();
 	

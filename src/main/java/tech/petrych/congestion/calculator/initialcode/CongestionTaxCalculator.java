@@ -1,4 +1,4 @@
-package congestion.calculator;
+package tech.petrych.congestion.calculator.initialcode;
 
 import java.util.Calendar;
 import java.util.Date;
