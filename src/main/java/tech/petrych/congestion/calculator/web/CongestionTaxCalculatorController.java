@@ -55,7 +55,7 @@ public class CongestionTaxCalculatorController {
 		
 		if (vehicleType == null || vehicleType.isEmpty()) {
 			String errorMessage = "No information about the vehicle (null).";
-			RuntimeException ex = new RuntimeException(errorMessage);
+			InputModelValidationException ex = new InputModelValidationException(errorMessage);
 			LOG.error(errorMessage, ex);
 		
 			throw ex;
